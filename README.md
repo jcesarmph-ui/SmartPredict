@@ -1,5 +1,5 @@
 [![Open in Colab](https://colab.research.google.com/assets/colab-badge.svg)]
-(https://colab.research.google.com/github/jcesarmph-ui/SmartPredict/blob/main/notebooks/manutencao_preditiva_M1.ipynb)
+(https://colab.research.google.com/drive/1pDgOeIPM-7pm3ICFI-PMrnoko2YV50YL?usp=sharing)
 
 # SmartPredict
 
