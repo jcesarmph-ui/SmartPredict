@@ -6,3 +6,7 @@ Entrega M1:
 - Diagnóstico do problema
 - ETL inicial
 - Organização dos dados
+
+Dataset utilizado:
+AI4I Predictive Maintenance Dataset
+https://archive.ics.uci.edu/ml/datasets/AI4I+2020+Predictive+Maintenance+Dataset
