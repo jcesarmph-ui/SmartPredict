@@ -1,63 +1,100 @@
-# Projeto: Título do Projeto
+# Projeto: Manutenção Preditiva de Falhas Industriais com Machine Learning
+
+---
 
 ### 1. Identificação do Grupo
-* **Instituição:** Centro Universitário da Fundação Santo André (FSA) / UNICID
-* **Curso:** [Inserir Nome do Curso]
-* **Grupo:** [Inserir Nome ou Número do Grupo]
-* **Integrantes:** * [Nome Completo] - RA: [000000]
-    * [Nome Completo] - RA: [000000]
-    * [Nome Completo] - RA: [000000]
+* **Instituição:** Faculdade Engenheiro Salvador Arena  
+* **Curso:** Engenharia de Controle e Automação  
+* **Grupo:** Grupo 1  
+
+* **Integrantes:**
+    * Júlio César Moreira Pereira - RA: 062210025
+    * Lucas Silva de Alencar - RA: 062210011
+    * Mykaella Soares Dutra - RA: 062210031
+    * Sarah Vieira de Andrade - RA: 062210005
 
 ---
 
 ### 2. Área Problema Selecionada
-O grupo seleciona uma das áreas norteadoras abaixo para o desenvolvimento do projeto:
-* [ ] Manutenção Preditiva de Zero-Downtime
-* [ ] Eficiência Energética e Descarbonização via Smart Grids
-* [ ] Controle de Qualidade Autônomo com Visão Computacional
-* [ ] Gêmeos Digitais (Digital Twins) e Analytics em Tempo Real
+O grupo seleciona a seguinte área:
 
-> **Nota:** Marque com um [x] a opção escolhida.
+* [x] Manutenção Preditiva de Zero-Downtime  
+* [ ] Eficiência Energética e Descarbonização via Smart Grids  
+* [ ] Controle de Qualidade Autônomo com Visão Computacional  
+* [ ] Gêmeos Digitais (Digital Twins) e Analytics em Tempo Real  
 
 ---
 
 ### 3. Diagnóstico e Definição do Problema
-Esta seção apresenta a fundamentação do desafio. O grupo descreve o cenário de atuação e justifica a importância da solução proposta.
-* **Contexto:** O projeto aborda o cenário de [descrever brevemente o setor, ex: indústria 4.0, gestão de energia].
-* **Problema:** A dificuldade central reside em [explicar o gargalo ou falha que os dados ajudam a resolver].
-* **Impacto:** A solução visa otimizar [mencionar o ganho esperado, ex: redução de custos, aumento de segurança].
+
+Esta seção apresenta a fundamentação do desafio.
+
+* **Contexto:** O projeto está inserido no cenário da Indústria 4.0, onde sensores monitoram máquinas em tempo real, permitindo a coleta contínua de dados operacionais.
+
+* **Problema:** Falhas inesperadas em equipamentos industriais geram paradas não planejadas, aumentando custos operacionais, reduzindo a produtividade e impactando negativamente a eficiência do sistema produtivo.
+
+* **Impacto:** A solução proposta visa prever falhas antecipadamente por meio de técnicas de Machine Learning, permitindo a realização de manutenção preditiva, redução de custos e aumento da disponibilidade dos equipamentos.
 
 ---
 
 ### 4. Arquitetura de Dados (Fonte e Dataset)
+
 O projeto utiliza dados estruturados para alimentar os modelos preditivos.
-* **Origem dos Dados:** [Link para o dataset no Kaggle, UCI ou repositório institucional].
-* **Características:** O conjunto de dados apresenta variáveis como [listar principais sensores, carimbos de tempo ou categorias].
-* **Volume:** O dataset conta com [X] registros e [Y] atributos técnicos.
+
+* **Origem dos Dados:**  
+Dataset de manutenção preditiva disponível em:  
+https://www.kaggle.com/datasets/stephanmatzka/predictive-maintenance-dataset-ai4i-2020
+
+* **Características:**
+    - Temperatura do ar (Air temperature)
+    - Temperatura do processo (Process temperature)
+    - Velocidade de rotação (Rotational speed)
+    - Torque
+    - Desgaste da ferramenta (Tool wear)
+    - Tipo do produto (Type)
+    - Indicador de falha da máquina (Machine failure)
+
+* **Volume:**  
+O dataset possui aproximadamente **10.000 registros** e **14 atributos técnicos**, incluindo variáveis numéricas e categóricas.
 
 ---
 
 ### 5. Plano de Tratamento de Dados (ETL)
-O pipeline de dados segue as seguintes etapas de processamento:
-1. **Extração:** A ingestão ocorre via arquivos [CSV/JSON] ou conexão direta com banco de dados.
-2. **Transformação:** O grupo aplica a limpeza de valores ausentes, a remoção de outliers e a normalização das escalas numéricas.
-3. **Carga:** Os dados tratados são disponibilizados na pasta `/data/processed` para consumo dos modelos de Machine Learning.
+
+O pipeline de dados segue as seguintes etapas:
+
+1. **Extração:**
+   Os dados foram carregados a partir de um arquivo no formato CSV utilizando a biblioteca Pandas no ambiente Python (Google Colab).
+
+2. **Transformação:**
+   Foram aplicadas as seguintes etapas de tratamento:
+   - Remoção de colunas irrelevantes (`UDI` e `Product ID`), por não contribuírem para a previsão
+   - Conversão da variável categórica `Type` em variáveis numéricas utilizando One-Hot Encoding
+   - Verificação de valores nulos (não foram encontrados valores ausentes)
+   - Padronização dos dados numéricos utilizando `StandardScaler` para melhorar o desempenho dos modelos de Machine Learning
+
+3. **Carga:**
+   Os dados tratados foram exportados para um novo arquivo (`dados_tratados.csv`), sendo armazenados para utilização nas próximas etapas do projeto (M2 e M3).
 
 ---
 
 ### 6. Estrutura do Repositório
-A organização das pastas facilita a manutenção e o versionamento do projeto:
-* `/docs`: Contém os diagramas de fluxo de dados e a documentação técnica.
-* `/data/raw`: Armazena os arquivos de dados originais (não modificados).
-* `/data/processed`: Armazena os dados após a execução do script de ETL.
-* `/scripts`: Contém os códigos Python responsáveis pelo tratamento dos dados.
-* `requirements.txt`: Lista todas as bibliotecas necessárias para a execução do projeto.
+
+A organização do projeto segue a seguinte estrutura:
+
+* `/docs`: Documentação e descrição do projeto  
+* `/data/raw`: Dados brutos (originais)  
+* `/data/processed`: Dados tratados após ETL  
+* `/notebooks`: Notebooks do Google Colab (M1, M2, M3)  
+* `/scripts`: Scripts auxiliares em Python  
+* `requirements.txt`: Bibliotecas necessárias para execução  
 
 ---
 
 ### 7. Instruções para Execução
-Para reproduzir o ambiente de dados e executar o pipeline de ETL:
-1. Clona-se este repositório.
-2. Instalam-se as dependências através do comando:
+
+Para reproduzir o ambiente e executar o projeto:
+
+1. Clonar o repositório:
    ```bash
-   pip install -r requirements.txt
+   git clone https://github.com/jcesarmph-ui/SmartPredict.git
