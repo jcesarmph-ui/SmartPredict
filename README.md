@@ -78,7 +78,61 @@ O pipeline de dados segue as seguintes etapas:
 
 ---
 
-### 6. Estrutura do Repositório
+### 6. Análise Exploratória de Dados (M2)
+Objetivo: 
+Realizar a exploração dos dados para identificar padrões, correlações e outliers relevantes para a previsão de falhas.
+
+Principais Análises Realizadas
+Estatística descritiva dos dados
+Matriz de correlação entre variáveis
+Identificação de outliers com boxplot
+Análise de relações entre variáveis com scatterplot
+Distribuição de variáveis com histogramas
+Principais Insights
+Variáveis como Torque e Desgaste da ferramenta possuem forte relação com falhas
+Outliers podem indicar comportamentos anormais ou falhas críticas
+Existe padrão entre variáveis operacionais e ocorrência de falha
+Hipóteses Validadas
+Quanto maior o torque, maior a chance de falha 
+O desgaste da ferramenta influencia diretamente a falha 
+Outliers podem representar falhas críticas 
+
+### 7. Notebook no Google Colab
+(https://colab.research.google.com/drive/17jjNm275cG6SXJODuF8_FYQ4cprOIov2?usp=sharing)
+
+### 8. Estrutura do Repositório
+/docs
+/data/raw
+/data/processed
+/notebooks
+/scripts
+requirements.txt
+
+### 9. Tecnologias Utilizadas
+Python
+Pandas
+NumPy
+Matplotlib
+Seaborn
+Scikit-learn
+Google Colab
+GitHub
+
+### 10.  Apêndice de IA
+Ferramenta utilizada:
+ChatGPT
+
+Forma de uso:
+Auxílio na estruturação do notebook
+Sugestão de análises exploratórias
+Apoio na construção de gráficos
+Suporte no desenvolvimento de código Python
+Validação:
+Todas as análises foram verificadas manualmente pelo grupo
+Os resultados foram conferidos com base nos dados reais
+Nenhuma análise foi utilizada sem validação técnica
+
+### 11. Estrutura do Repositório
 
 A organização do projeto segue a seguinte estrutura:
 
@@ -91,7 +145,7 @@ A organização do projeto segue a seguinte estrutura:
 
 ---
 
-### 7. Instruções para Execução
+### 12. Instruções para Execução
 
 Para reproduzir o ambiente e executar o projeto:
 
