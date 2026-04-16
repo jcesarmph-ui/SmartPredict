@@ -156,3 +156,5 @@ Para reproduzir o ambiente e executar o projeto:
 **N1 - 2º Bimestre - Individual - Análise Exploratória de Dados (EDA)**
 
 O aluno Júlio César validou estatisticamente que a variável Torque é um preditor relevante na ocorrência de falhas em máquinas industriais. O teste de Mann-Whitney apresentou p-value = 2.26e-64, indicando forte evidência contra a hipótese nula. Além disso, o tamanho do efeito (Cohen's d = 0.79) demonstrou uma diferença de magnitude média a alta entre os grupos, reforçando a importância prática dessa variável para o modelo de manutenção preditiva.
+
+O aluno Lucas Silva validou estatisticamente que a variável de desgaste da ferramenta (Tool wear [min]) é um fator relevante na ocorrência de falhas em máquinas industriais. O teste de Mann-Whitney apresentou p-value= 2.91e-24,ou seja, inferior a 0,05, indicando evidência significativa contra a hipótese nula. Além disso, o tamanho do efeito (Cohen’s d = 0,58) demonstrou uma diferença de magnitude moderada entre os grupos, reforçando a importância prática dessa variável para modelos de manutenção preditiva.
