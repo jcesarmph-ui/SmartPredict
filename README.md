@@ -206,29 +206,6 @@ Foi desenvolvido um modelo de classificação utilizando Random Forest para prev
 
 O modelo apresentou desempenho máximo, indicando forte capacidade de identificação de padrões.
 
-Observação: Resultados perfeitos podem indicar overfitting, sendo recomendada validação futura com novos dados.
-
----
-
-13. Modelo de Inteligência Artificial (M3)
-
-Foi desenvolvido um modelo de classificação utilizando Random Forest para prever falhas em máquinas industriais.
-
-Resultados:
-
-Acurácia: 1.00
-F1-score: 1.00
-
-Matriz de confusão:
-
-1932 verdadeiros negativos
-68 verdadeiros positivos
-0 falsos positivos
-0 falsos negativos
-
-O modelo apresentou desempenho máximo, indicando forte capacidade de identificação de padrões.
-
-Observação: Resultados perfeitos podem indicar overfitting, sendo recomendada validação futura com novos dados.
 
 14. Protótipo (Google AI Studio)
 
