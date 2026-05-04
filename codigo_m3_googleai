@@ -1,0 +1,331 @@
+import { useState, useEffect, ReactNode } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { 
+  Activity, 
+  Thermometer, 
+  RotateCw, 
+  Wrench, 
+  Zap, 
+  AlertTriangle, 
+  CheckCircle2,
+  Cpu,
+  BarChart3,
+  RefreshCw
+} from 'lucide-react';
+import { 
+  AreaChart, 
+  Area, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer 
+} from 'recharts';
+import { predictFailure, SensorData } from './services/geminiService';
+
+// Mock historical data for the chart
+const initialHistory = Array.from({ length: 20 }, (_, i) => ({
+  time: i,
+  val: 30 + Math.random() * 20
+}));
+
+export default function App() {
+  const [sensors, setSensors] = useState<SensorData>({
+    torque: 40,
+    airTemperature: 25,
+    processTemperature: 35,
+    rotationSpeed: 1500,
+    toolWear: 50
+  });
+
+  const [prediction, setPrediction] = useState<"Falha provável" | "Sem falha" | "Analisando...">("Sem falha");
+  const [history, setHistory] = useState(initialHistory);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Update history periodically to simulate live feed
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setHistory(prev => {
+        const next = [...prev.slice(1), { 
+          time: prev[prev.length - 1].time + 1, 
+          val: sensors.torque + (Math.random() * 10 - 5) 
+        }];
+        return next;
+      });
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [sensors.torque]);
+
+  const handlePredict = async () => {
+    setIsLoading(true);
+    setPrediction("Analisando...");
+    const result = await predictFailure(sensors);
+    setPrediction(result);
+    setIsLoading(false);
+  };
+
+  const updateSensor = (key: keyof SensorData, value: number) => {
+    setSensors(prev => ({ ...prev, [key]: value }));
+  };
+
+  return (
+    <div className="min-h-screen bg-[#0c0d0f] text-gray-100 flex flex-col p-4 md:p-8 font-sans" id="app-root">
+      {/* Header */}
+      <header className="flex justify-between items-center mb-8 border-b border-industrial-border pb-4" id="main-header">
+        <div className="flex items-center gap-3">
+          <div className="bg-industrial-accent/20 p-2 rounded-lg">
+            <Cpu className="text-industrial-accent w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold tracking-tight uppercase" id="app-title">Predix Industrial</h1>
+            <p className="text-xs text-gray-400 font-mono" id="system-id">SYS_ID: RX-9000-V1</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 text-xs font-mono">
+          <div className="flex items-center gap-2 bg-industrial-card px-3 py-1.5 rounded-full border border-industrial-border">
+            <div className="w-2 h-2 rounded-full bg-industrial-success animate-pulse" />
+            <span className="text-gray-400">STATE:</span>
+            <span className="text-industrial-success">ONLINE</span>
+          </div>
+          <p className="hidden sm:block text-gray-500 uppercase">{new Date().toLocaleDateString('pt-BR')}</p>
+        </div>
+      </header>
+
+      <main className="grid grid-cols-1 lg:grid-cols-12 gap-6 flex-1" id="main-container">
+        {/* Controls Column */}
+        <div className="lg:col-span-4 flex flex-col gap-6" id="controls-section">
+          <section className="bg-industrial-card border border-industrial-border rounded-xl p-6 shadow-xl" id="sensor-controls">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-sm font-semibold uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                <RefreshCw className="w-4 h-4" /> Parâmetros de Entrada
+              </h2>
+            </div>
+            
+            <div className="space-y-6">
+              <SensorSlider 
+                id="torque-slider"
+                label="Torque" 
+                value={sensors.torque} 
+                min={0} max={100} unit="Nm" 
+                icon={<Zap className="w-4 h-4" />}
+                onChange={(v) => updateSensor('torque', v)}
+              />
+              <SensorSlider 
+                id="air-temp-slider"
+                label="Temp. Ar" 
+                value={sensors.airTemperature} 
+                min={10} max={60} unit="°C" 
+                icon={<Thermometer className="w-4 h-4 text-blue-400" />}
+                onChange={(v) => updateSensor('airTemperature', v)}
+              />
+              <SensorSlider 
+                id="process-temp-slider"
+                label="Temp. Processo" 
+                value={sensors.processTemperature} 
+                min={20} max={100} unit="°C" 
+                icon={<Thermometer className="w-4 h-4 text-orange-400" />}
+                onChange={(v) => updateSensor('processTemperature', v)}
+              />
+              <SensorSlider 
+                id="rotation-slider"
+                label="Velocidade" 
+                value={sensors.rotationSpeed} 
+                min={500} max={3000} unit="RPM" 
+                icon={<RotateCw className="w-4 h-4" />}
+                onChange={(v) => updateSensor('rotationSpeed', v)}
+              />
+              <SensorSlider 
+                id="wear-slider"
+                label="Desgaste Ferramenta" 
+                value={sensors.toolWear} 
+                min={0} max={200} unit="min" 
+                icon={<Wrench className="w-4 h-4" />}
+                onChange={(v) => updateSensor('toolWear', v)}
+              />
+            </div>
+
+            <button 
+              id="analyze-button"
+              onClick={handlePredict}
+              disabled={isLoading}
+              className={`w-full mt-8 py-4 rounded-lg font-bold uppercase tracking-widest transition-all shadow-lg flex items-center justify-center gap-2
+                ${isLoading 
+                  ? 'bg-gray-700 cursor-not-allowed text-gray-400' 
+                  : 'bg-industrial-accent hover:bg-industrial-accent/90 active:scale-[0.98]'
+                }`}
+            >
+              {isLoading ? <RefreshCw className="w-5 h-5 animate-spin" /> : <Activity className="w-5 h-5" />}
+              {isLoading ? 'Analisando...' : 'Executar Análise'}
+            </button>
+          </section>
+        </div>
+
+        {/* Output & Monitoring Column */}
+        <div className="lg:col-span-8 flex flex-col gap-6" id="monitoring-section">
+          {/* Prediction Hub */}
+          <section className="bg-industrial-card border border-industrial-border rounded-xl p-1 shadow-2xl relative overflow-hidden" id="prediction-result">
+            <div className="p-8 flex flex-col items-center justify-center min-h-[300px] text-center relative z-10">
+              <span className="text-xs font-mono uppercase tracking-[0.3em] text-gray-500 mb-4">Resultado da IA Preditiva</span>
+              
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={prediction}
+                  initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 1.1, y: -10 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                  className="flex flex-col items-center"
+                >
+                  {prediction === "Analisando..." ? (
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="w-16 h-16 border-4 border-industrial-accent/20 border-t-industrial-accent rounded-full animate-spin" />
+                    </div>
+                  ) : prediction === "Falha provável" ? (
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-industrial-error/10 p-6 rounded-full mb-2">
+                        <AlertTriangle className="w-16 h-16 text-industrial-error" />
+                      </div>
+                      <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-industrial-error">
+                        Falha provável
+                      </h2>
+                      <p className="text-gray-400 max-w-sm mt-2">
+                        Intervenção recomendada imediata. Parâmetros críticos detectados fora do padrão operacional.
+                      </p>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center gap-4">
+                      <div className="bg-industrial-success/10 p-6 rounded-full mb-2">
+                        <CheckCircle2 className="w-16 h-16 text-industrial-success" />
+                      </div>
+                      <h2 className="text-4xl sm:text-6xl font-black uppercase tracking-tighter text-industrial-success">
+                        Sem falha
+                      </h2>
+                      <p className="text-gray-400 max-w-sm mt-2">
+                        A máquina está operando dentro dos limites seguros. Monitoramento contínuo ativo.
+                      </p>
+                    </div>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+
+              {/* Decorative hardware elements */}
+              <div className="absolute top-4 left-4 w-12 h-0.5 bg-industrial-border" />
+              <div className="absolute top-4 left-4 w-0.5 h-12 bg-industrial-border" />
+              <div className="absolute bottom-4 right-4 w-12 h-0.5 bg-industrial-border" />
+              <div className="absolute bottom-4 right-4 w-0.5 h-12 bg-industrial-border" />
+            </div>
+
+            {/* Background scanline effect */}
+            <div className="absolute inset-0 pointer-events-none opacity-5 bg-[linear-gradient(rgba(18,16,16,0)_50%,rgba(0,0,0,0.25)_50%),linear-gradient(90deg,rgba(255,0,0,0.06),rgba(0,255,0,0.02),rgba(0,0,255,0.06))] bg-[length:100%_2px,3px_100%]" />
+          </section>
+
+          {/* Monitoring Charts */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6" id="data-visuals">
+            <section className="bg-industrial-card border border-industrial-border rounded-xl p-6" id="realtime-chart">
+              <h3 className="text-xs font-mono uppercase tracking-widest text-gray-500 mb-4 flex items-center gap-2">
+                <BarChart3 className="w-4 h-4" /> Fluxo de Torque (Real-time)
+              </h3>
+              <div className="h-48 w-full">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={history}>
+                    <defs>
+                      <linearGradient id="colorVal" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.3}/>
+                        <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#2a2d32" />
+                    <XAxis dataKey="time" hide />
+                    <YAxis domain={[0, 100]} hide />
+                    <Tooltip 
+                      contentStyle={{ backgroundColor: '#1f2125', border: '1px solid #2a2d32', fontSize: '12px' }}
+                      itemStyle={{ color: '#3b82f6' }}
+                    />
+                    <Area 
+                      type="monotone" 
+                      dataKey="val" 
+                      stroke="#3b82f6" 
+                      fillOpacity={1} 
+                      fill="url(#colorVal)" 
+                      isAnimationActive={false}
+                    />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </section>
+
+            <section className="bg-industrial-card border border-industrial-border rounded-xl p-6 flex flex-col justify-between" id="quick-stats">
+              <div className="space-y-4">
+                <h3 className="text-xs font-mono uppercase tracking-widest text-gray-500 mb-2">Resumo Operacional</h3>
+                <div className="flex justify-between items-end border-b border-industrial-border pb-2">
+                  <span className="text-sm text-gray-400">Tempo de Atividade</span>
+                  <span className="text-lg font-mono font-bold">1.240,5h</span>
+                </div>
+                <div className="flex justify-between items-end border-b border-industrial-border pb-2">
+                  <span className="text-sm text-gray-400">Eficiência Geral</span>
+                  <span className="text-lg font-mono font-bold text-industrial-success">98.2%</span>
+                </div>
+                <div className="flex justify-between items-end border-b border-industrial-border pb-2">
+                  <span className="text-sm text-gray-400">Próxima Manutenção</span>
+                  <span className="text-lg font-mono font-bold text-orange-400">em 42h</span>
+                </div>
+              </div>
+              <div className="mt-4 pt-4 border-t border-industrial-border">
+                <p className="text-[10px] uppercase tracking-tighter text-gray-600 font-mono">
+                  Machine Status: Nominal | AI Confidence: 99.4%
+                </p>
+              </div>
+            </section>
+          </div>
+        </div>
+      </main>
+
+      <footer className="mt-8 pt-4 border-t border-industrial-border text-center text-xs text-gray-600 font-mono" id="main-footer">
+        PREDIX INDUSTRIAL SYSTEMS &copy; 2026 | TODOS OS DIREITOS RESERVADOS | ANALYTICS ENGINE BY GEMINI AI
+      </footer>
+    </div>
+  );
+}
+
+interface SensorSliderProps {
+  id: string;
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  unit: string;
+  icon: ReactNode;
+  onChange: (val: number) => void;
+}
+
+function SensorSlider({ id, label, value, min, max, unit, icon, onChange }: SensorSliderProps) {
+  return (
+    <div className="space-y-3" id={id}>
+      <div className="flex justify-between items-center px-1">
+        <label className="text-[10px] font-mono text-gray-500 uppercase tracking-widest flex items-center gap-2">
+          {icon} {label}
+        </label>
+        <div className="flex items-baseline gap-1">
+          <span className="text-lg font-mono font-bold tracking-tighter">{value}</span>
+          <span className="text-[10px] font-mono text-gray-500">{unit}</span>
+        </div>
+      </div>
+      <div className="relative flex items-center group">
+        <input 
+          type="range"
+          min={min}
+          max={max}
+          step={id.includes('rotation') ? 10 : 1}
+          value={value}
+          onChange={(e) => onChange(Number(e.target.value))}
+          className="w-full h-1 bg-industrial-border rounded-lg appearance-none cursor-pointer accent-industrial-accent group-hover:bg-industrial-border/80 outline-none"
+        />
+        {/* Fill track visualization */}
+        <div 
+          className="absolute left-0 h-1 bg-industrial-accent rounded-lg pointer-events-none transition-all duration-300"
+          style={{ width: `${((value - min) / (max - min)) * 100}%` }}
+        />
+      </div>
+    </div>
+  );
+}
