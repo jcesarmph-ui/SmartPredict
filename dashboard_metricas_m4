@@ -1,0 +1,251 @@
+LINK DO DASHBOARD NO GOOGLE AI STUDIO: https://ai.studio/apps/90c99e26-d356-4ec3-bf14-7a73f042e0fd
+
+import { 
+  Activity, 
+  AlertTriangle, 
+  Cpu, 
+  Database, 
+  Gauge, 
+  Settings, 
+  CheckCircle2,
+  TrendingDown,
+  TrendingUp,
+  Box,
+  Factory
+} from 'lucide-react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer, 
+  Cell 
+} from 'recharts';
+import { motion } from 'motion/react';
+
+// Mock data for machine failures
+const failureData = [
+  { name: 'Prensa A1', failures: 12 },
+  { name: 'Torno B4', failures: 19 },
+  { name: 'Fresadora C2', failures: 5 },
+  { name: 'Esteira D1', failures: 8 },
+  { name: 'Injetora E3', failures: 15 },
+  { name: 'Robô F2', failures: 3 },
+];
+
+export default function App() {
+  return (
+    <div className="min-h-screen bg-slate-950 font-sans text-slate-200">
+      {/* Header */}
+      <header className="border-b border-white/10 bg-slate-900/50 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 bg-blue-600/20 rounded-lg border border-blue-500/30">
+              <Factory className="w-6 h-6 text-blue-400" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold tracking-tight text-white uppercase">SmartPredict</h1>
+              <p className="text-[10px] text-blue-400 font-mono leading-none tracking-widest uppercase">Monitoramento Inteligente</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4 text-xs font-mono text-slate-400">
+            <div className="flex items-center gap-2 px-3 py-1 bg-slate-800 rounded-full border border-white/5">
+              <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+              SISTEMA OPERACIONAL
+            </div>
+            <div className="hidden sm:flex items-center gap-2">
+              <Settings className="w-4 h-4 cursor-pointer hover:text-blue-400 transition-colors" />
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto p-4 md:p-8 space-y-6">
+        {/* Top Stats */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-slate-900 border border-white/10 p-6 rounded-xl relative overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <CheckCircle2 size={64} className="text-emerald-500" />
+            </div>
+            <p className="text-slate-400 text-sm font-medium">Acurácia do Modelo</p>
+            <div className="flex items-baseline gap-2 mt-2">
+              <h2 className="text-4xl font-mono font-bold text-emerald-400 tracking-tighter">100%</h2>
+              <TrendingUp className="text-emerald-500 w-5 h-5" />
+            </div>
+            <div className="mt-4 h-1 w-full bg-slate-800 rounded-full overflow-hidden">
+              <motion.div 
+                initial={{ width: 0 }}
+                animate={{ width: '100%' }}
+                className="h-full bg-emerald-500"
+              />
+            </div>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-slate-900 border border-white/10 p-6 rounded-xl relative overflow-hidden group"
+          >
+             <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <AlertTriangle size={64} className="text-amber-500" />
+            </div>
+            <p className="text-slate-400 text-sm font-medium">Falhas Detectadas</p>
+            <div className="flex items-baseline gap-2 mt-2">
+              <h2 className="text-4xl font-mono font-bold text-amber-500 tracking-tighter">62</h2>
+              <TrendingDown className="text-amber-500 w-5 h-5" />
+            </div>
+            <p className="text-[10px] font-mono text-slate-500 mt-2 uppercase tracking-wide">Últimas 24 horas</p>
+          </motion.div>
+
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-slate-900 border border-white/10 p-6 rounded-xl relative overflow-hidden group"
+          >
+            <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+              <Gauge size={64} className="text-blue-500" />
+            </div>
+            <p className="text-slate-400 text-sm font-medium">Torque Médio</p>
+            <div className="flex items-baseline gap-2 mt-2">
+              <h2 className="text-4xl font-mono font-bold text-blue-400 tracking-tighter">148.5</h2>
+              <span className="text-slate-500 font-mono text-lg font-medium">Nm</span>
+            </div>
+            <p className="text-[10px] font-mono text-slate-500 mt-2 uppercase tracking-wide">Status: Operação Nominal</p>
+          </motion.div>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Failure Chart */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.3 }}
+            className="lg:col-span-2 bg-slate-900 border border-white/10 p-6 rounded-xl"
+          >
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <Box className="w-5 h-5 text-blue-400" />
+                <h3 className="font-semibold text-white uppercase tracking-wider text-sm">Falhas por Equipamento</h3>
+              </div>
+              <div className="text-[10px] font-mono bg-blue-500/10 text-blue-400 px-2 py-1 rounded border border-blue-500/20 uppercase">
+                Análise Semanal
+              </div>
+            </div>
+            
+            <div className="h-[300px] w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={failureData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1e293b" />
+                  <XAxis 
+                    dataKey="name" 
+                    stroke="#475569" 
+                    fontSize={10} 
+                    tickLine={false} 
+                    axisLine={false} 
+                    fontFamily="JetBrains Mono"
+                  />
+                  <YAxis 
+                    stroke="#475569" 
+                    fontSize={10} 
+                    tickLine={false} 
+                    axisLine={false} 
+                    fontFamily="JetBrains Mono"
+                  />
+                  <Tooltip 
+                    contentStyle={{ 
+                      backgroundColor: '#0f172a', 
+                      borderColor: '#334155', 
+                      borderRadius: '8px',
+                      color: '#f8fafc',
+                      fontFamily: 'JetBrains Mono',
+                      fontSize: '12px'
+                    }}
+                    cursor={{ fill: 'rgba(59, 130, 246, 0.1)' }}
+                  />
+                  <Bar dataKey="failures" radius={[4, 4, 0, 0]}>
+                    {failureData.map((entry, index) => (
+                      <Cell 
+                        key={`cell-${index}`} 
+                        fill={entry.failures > 15 ? '#ef4444' : entry.failures > 10 ? '#f59e0b' : '#3b82f6'} 
+                      />
+                    ))}
+                  </Bar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+          </motion.div>
+
+          {/* Model Info Area */}
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.98 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.4 }}
+            className="space-y-6"
+          >
+            <div className="bg-gradient-to-br from-blue-600 to-blue-800 p-6 rounded-xl border border-blue-400/20 shadow-lg shadow-blue-900/20 relative overflow-hidden">
+               <div className="absolute top-0 right-0 -mt-4 -mr-4 opacity-20">
+                <Cpu size={120} className="text-white" />
+              </div>
+              <div className="relative z-10">
+                <Activity className="w-8 h-8 text-white mb-4" />
+                <h3 className="text-xl font-bold text-white mb-2 leading-tight">
+                  Status da Inteligência Artificial
+                </h3>
+                <div className="space-y-4">
+                  <div className="bg-white/10 backdrop-blur-sm p-4 rounded-lg border border-white/10">
+                    <p className="text-blue-50 text-sm font-medium italic">
+                      "Modelo otimizado com Random Forest e Cross Validation"
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <span className="text-[10px] font-mono bg-blue-900/50 text-blue-100 px-2 py-1 rounded border border-blue-400/30">RF-Xv7</span>
+                    <span className="text-[10px] font-mono bg-blue-900/50 text-blue-100 px-2 py-1 rounded border border-blue-400/30">STABLE</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-slate-900 border border-white/10 p-5 rounded-xl">
+              <div className="flex items-center gap-3 mb-4">
+                <Database className="w-4 h-4 text-slate-400" />
+                <h4 className="text-xs font-bold font-mono text-slate-300 uppercase tracking-widest">Logs em Tempo Real</h4>
+              </div>
+              <div className="space-y-3">
+                {[
+                  { time: '10:54', msg: 'Análise de torque normalizada', code: 'OK-200' },
+                  { time: '10:52', msg: 'Prensa A1 - Vibração leve', code: 'W-401' },
+                  { time: '10:48', msg: 'Sincronização de sensores', code: 'SYNC' },
+                ].map((log, i) => (
+                  <div key={i} className="flex items-start justify-between p-2 rounded bg-slate-800/50 border border-white/5 font-mono">
+                    <div className="flex gap-2 text-[10px]">
+                      <span className="text-slate-500">{log.time}</span>
+                      <span className="text-slate-300">{log.msg}</span>
+                    </div>
+                    <span className="text-[10px] text-blue-400 font-bold">{log.code}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </main>
+
+      <footer className="max-w-7xl mx-auto px-4 py-8 border-top border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4 text-slate-500 text-xs font-mono">
+        <p>&copy; 2024 SMARTPREDICT INDUSTRIAL SYSTEMS</p>
+        <div className="flex gap-6">
+          <span className="hover:text-blue-400 cursor-pointer transition-colors">POLÍTICA DE SEGURANÇA</span>
+          <span className="hover:text-blue-400 cursor-pointer transition-colors">SUPORTE TÉCNICO</span>
+        </div>
+      </footer>
+    </div>
+  );
+}
