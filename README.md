@@ -229,8 +229,11 @@ pip install -r requirements.txt
 | Integrante | Variável Analisada | Teste Realizado |
 
 | Júlio César Moreira Pereira | Torque | Mann-Whitney + Cohen's d | Validou que a variável Torque é um preditor relevante de falha. Teste de Mann-Whitney: p-value = 2.26e-64 Cohen’s d = 0.79 (efeito médio-alto)
+
 | Lucas Silva de Alencar | Tool wear | Mann-Whitney + Cohen's d | Validou o desgaste da ferramenta como fator relevante. p-value = 2.91e-24 Cohen’s d = 0.58 (efeito moderado)
+
 | Sarah Vieira de Andrade | Tool wear | Mann-Whitney | Confirmou o impacto do desgaste da ferramenta. p-value = 2.26e-64 Diferença de médias ≈ 10,54
+
 | Mykaella Soares Dutra | Process temperature | Mann-Whitney + Cohen's d | Validou a temperatura de processo como relevante. p-value = 6.49e-05 Cohen’s d = 0.21 (efeito pequeno)
 
 ---
