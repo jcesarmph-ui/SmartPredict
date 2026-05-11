@@ -180,6 +180,10 @@ Foi desenvolvido um dashboard no Google AI Studio para visualização dos result
 - Visualização gráfica das predições
 - Interface para monitoramento industrial
 
+
+# Dashboard de Monitoramento em Tempo Real
+https://ai.studio/apps/90c99e26-d356-4ec3-bf14-7a73f042e0fd
+
 ---
 
 # 🧱 8. Estrutura do Repositório
