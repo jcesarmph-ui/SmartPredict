@@ -260,6 +260,10 @@ Todos os resultados, métricas, gráficos e interpretações estatísticas foram
 
 ---
 
+## Investigação Técnica Individual
+
+O aluno Júlio César realizou testes de robustez no modelo Random Forest utilizando simulação de ruído nos sensores industriais e análise de explicabilidade com SHAP. Os resultados mostraram forte dependência das variáveis Torque e Tool wear para as decisões da IA.
+
 © 2026 - Projeto de Ciência de Dados - Faculdade Engenheiro Salvador Arena
 14. Protótipo (Google AI Studio)
 
